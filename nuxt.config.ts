@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxt/image",
     "@vueuse/nuxt",
+    "@nuxtjs/cloudinary",
   ],
 
   runtimeConfig: {
@@ -27,5 +28,22 @@ export default defineNuxtConfig({
 
   $production: {
     ignorePrefix: "_",
+  },
+
+  security: {
+    headers: {
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        "img-src": ["'self'", "data:", "https://res.cloudinary.com"],
+      },
+    },
+  },
+
+  routeRules: {
+    "/api/blog": {
+      security: {
+        xssValidator: false,
+      },
+    },
   },
 });

@@ -2,18 +2,16 @@ import { z } from "zod";
 
 export const schema = z.object({
   id: z.number().optional(),
-  title: z.string(),
-  img: z.string(),
-  data: z.string(),
-  description: z.string(),
+  name: z.string(),
+  noTelepon: z.string(),
+  pesan: z.string(),
 });
 
 export const getInitialFormData = (): Partial<Schema> => ({
   id: undefined,
-  title: undefined,
-  img: undefined,
-  data: undefined,
-  description: undefined,
+  name: undefined,
+  noTelepon: undefined,
+  pesan: undefined,
 });
 
 export type Schema = z.output<typeof schema>;

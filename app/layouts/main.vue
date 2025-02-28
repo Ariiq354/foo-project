@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky top-0 bg-blue-200">
+  <div class="sticky top-0 z-10 bg-blue-200">
     <NuxtLink
       href="/"
       class="container flex items-center justify-center gap-4 py-4"

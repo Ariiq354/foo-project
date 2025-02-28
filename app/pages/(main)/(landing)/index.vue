@@ -7,13 +7,7 @@
 
   const page = ref(1);
   const pageCount = ref(4);
-  const items = ref(Array.from({ length: 55 }, (_, i) => i + 1));
-  const pagedItems = computed(() => {
-    return items.value?.slice(
-      (page.value - 1) * pageCount.value,
-      page.value * pageCount.value
-    );
-  });
+  const offset = computed(() => pageCount.value * (page.value - 1));
 
   watchEffect(() => {
     if (width.value >= 1024) {
@@ -24,31 +18,45 @@
       pageCount.value = 1;
     }
   });
+
+  const { data } = await useLazyFetch("/api/blog", {
+    query: {
+      limit: pageCount,
+      offset,
+    },
+  });
 </script>
 
 <template>
-  <main class="container flex flex-col items-center gap-4 py-12">
+  <main
+    v-if="data?.length"
+    class="container flex flex-col items-center gap-4 py-12"
+  >
     <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       <div
-        v-for="(item, index) in pagedItems"
+        v-for="(item, index) in data"
         :key="index"
         class="flex flex-col rounded-md border-t-4 border-blue-700 shadow-lg"
       >
-        <div class="h-72 w-full bg-gray-400" />
+        <div class="flex h-72 w-full items-center overflow-hidden">
+          <NuxtImg :src="item.img" />
+        </div>
         <div class="px-8 py-4">
-          <h1 class="text-3xl font-bold text-blue-900">Title {{ item }}</h1>
+          <h1 class="text-3xl font-bold text-blue-900">{{ item.title }}</h1>
           <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Earum unde
-            porro, impedit blanditiis consectetur suscipit sint sunt ut
-            exercitationem vitae cupiditate illo nobis delectus, excepturi
-            dicta. Odio minus omnis cumque.
+            {{ item.description }}
           </p>
         </div>
-        <UButton class="mx-auto my-4 w-fit" variant="outline" :to="`/${item}`">
+        <UButton
+          class="mx-auto my-4 w-fit"
+          variant="outline"
+          :to="`/${item.id}`"
+        >
           Selengkapnya
         </UButton>
       </div>
     </div>
-    <UPagination v-model="page" :page-count="pageCount" :total="items.length" />
+    <UPagination v-model="page" :page-count="pageCount" :total="data!.length" />
   </main>
+  <main v-else>No Data</main>
 </template>

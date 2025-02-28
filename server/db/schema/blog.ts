@@ -6,15 +6,17 @@ export const blogTable = sqliteTable("blog", {
   id: int().primaryKey({ autoIncrement: true }),
   title: text().notNull(),
   img: text().notNull(),
-  data: text({ mode: "json" }).notNull(),
+  data: text().notNull(),
+  description: text().notNull(),
   ...timestamp,
 });
 
 export const commentTable = sqliteTable("comment", {
-  id: text().primaryKey(),
+  id: int().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
-  no_telepon: text().notNull(),
+  noTelepon: text().notNull(),
   pesan: text().notNull(),
+  ...timestamp,
 });
 
 export type NewBlog = InferInsertModel<typeof blogTable>;

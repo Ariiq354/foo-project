@@ -26,7 +26,24 @@
   }
 
   function clickAdd() {
+    state.value = getInitialFormData();
     modalOpen.value = true;
+  }
+
+  function clickEdit(item: any) {
+    modalOpen.value = true;
+    state.value = item;
+  }
+
+  async function clickDelete(id: number) {
+    await $fetch("/api/blog", {
+      method: "DELETE",
+      body: {
+        id: [id],
+      },
+    });
+    await refresh();
+    modalOpen.value = false;
   }
 </script>
 
@@ -61,9 +78,9 @@
           icon="i-heroicons-x-mark-16-solid"
           variant="ghost"
           :disabled="isLoading"
-          @click="modalOpen = false"
+          @click="clickDelete(state.id!)"
         >
-          Batal
+          Hapus
         </UButton>
         <UButton
           type="submit"
@@ -116,9 +133,9 @@
         <UButton
           class="mx-auto my-4 w-fit"
           variant="outline"
-          :to="`/${item.id}`"
+          @click="clickEdit(item)"
         >
-          Selengkapnya
+          Edit
         </UButton>
       </div>
     </div>
